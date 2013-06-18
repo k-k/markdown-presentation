@@ -1,4 +1,13 @@
 {
+	"name": "kmfk/markdown-presentation",
+	"type": "silex-application",
+	"description": "A basic Presentation creator that allows use of Markdown for simplicity and efficiency.",
+	"keywords": ["mongodb", "markdown", "presentation", "silex"],
+	"homepage": "https://github.com/kmfk/markdown-presentation",
+	"license": "MIT",
+	"authors": [
+		{ "name": "Keith Kirk", "email": "keith.d.kirk@gmail.com" }
+	],
 	"require": {
 		"silex/silex": "1.0.*@dev",
 		"knplabs/knp-snappy": "dev-master",
