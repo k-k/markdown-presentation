@@ -1,4 +1,4 @@
-# Simple Markdown Formatted Presentations - With Silex. 
+# Markdown Presentations - With Silex & MongoDB. 
 
 ##Installation
 This project is managed with [composer](http://getcomposer.org/) and published to [packagist](https://packagist.org/packages/kmfk/markdown-presentation). To install it:
@@ -40,19 +40,8 @@ Uses [Google Code Prettify](https://code.google.com/p/google-code-prettify/) to 
 Using [KnpLabs Snappy](https://github.com/KnpLabs/snappy) and [wkhtmltopdf](http://wkhtmltopdf.googlecode.com/) your presentation can be exported as a PDF.
 
 #####Slide Navigation & Keyboard shortcuts:
-Relies on (Mousetrap.js)[http://craig.is/killing/mice] for keybindings.
+Relies on [Mousetrap.js](http://craig.is/killing/mice) for keybindings.
 Both the presentation view and editor have keyboard shortcuts. All standard keys are bound for the Presentation view, to allow it to work with common presenter's remotes.
-
-shortcuts | function | View
---- | ---
-`Left Arrow`, `Spacebar`, `Page Down` | Next Slide | Presentation
-`Right Arrow`, `Backspace`, `Up Down`  | Previous Slide | Presentation
-`Shift + Left` | Next Slide | Editor
-`Shift + Right` | Previous Slide | Editor
-`Shift + a`	| Add New Slide | Editor
-`Shift + i` | Insert Slide After Current | Editor
-`Shift + d` | Remove Current Slide | Editor
-`Shift + s` | Save Changes | Editor
 
 #####Markdown Editor & CSS
 Use the custom Markdown editor for quickly creating & formatting your presentation.  You can specify custom CSS to style any elements:
@@ -62,9 +51,9 @@ Use the custom Markdown editor for quickly creating & formatting your presentati
 		color: red;
 	}
 
-	/* Or an image... */
-	\!\[specific-title\]\(http:://example.com/image.jpg\)
-
+	/* Or an image... consider the following, using the image's alt tag*/
+	![specific-title](http:://example.com/image.jpg)
+	
 	img[alt=specific-title] {
 		border-radius: 5px;
 	}
