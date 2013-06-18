@@ -40,7 +40,7 @@ body>*:last-child {
 =============================================================================*/
 
 p, blockquote, ul, ol, dl, table, pre {
-  margin: 15px 0;
+  margin: .9em 0;
 }
 
 /* HEADERS
@@ -99,7 +99,7 @@ a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-
 }
 
 h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
-  margin-top: 10px;
+  margin-top: .9em;
 }
 
 /* LINKS
