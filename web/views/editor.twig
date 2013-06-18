@@ -1,0 +1,153 @@
+<html>
+   <head>
+      <title>Edit Presentations</title>
+      <link type="text/css" rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+      <link type="text/css" rel="stylesheet" href="/css/editor.css" />
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+      <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+      <script src="/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+		<script src="/scripts/mousetrap.min.js" type="text/javascript"></script>
+      <script src="/scripts/editor.js" type="text/javascript"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$("#add-remove-group button, #add-new-form input").tooltip({ 'placement': 'bottom' });
+			});
+		</script>
+   </head>
+   <body>
+      <div id="wait-overlay">
+         <div id="wait-message"> </div>
+      </div>
+		<header>
+			<div id="title">Markdown Presentation Project</div>
+			<div id="back-link"><a href="http://undefinedindex.com/" class="btn btn-warning"><i class="icon-thumbs-up icon-white"></i> <strong>Ui</strong></a>	
+		</header>
+		<div class="navbar">
+			<div class="navbar-inner" >
+				<div class="navbar-container">
+					<div id="selector-area">
+						<span class="muted">Presentation:</span> <select name="presentation" id="presentation"></select>
+					</div>
+					<div id="info-area">
+						<div class="info-box">
+							<span class="muted">Title</span>
+							<span id="meta-title" class="info-value editable"></span>
+						</div>
+						<div class="info-box">
+							<span class="muted">Author</span>
+							<span id="meta-author" class="info-value editable"></span>
+						</div>
+						<div class="info-box">
+							<span class="muted">Pages</span>
+							<span id="meta-pages" class="info-value"></span>
+						</div>
+						<div class="info-box">
+							<span class="muted">Modified</span>
+							<span id="meta-modified_dt" class="info-value"></span>
+						</div>
+					</div>
+					<div id="add-new">
+						<button class="btn btn-small btn-primary" id="add" data-toggle="modal" data-target="#add-new-presentation"><i class="icon-plus icon-white"></i> Add Presentation</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="slides" >
+			<div id="slides-empty" class="hero-unit">
+				<h1>Select a Presentation</h1>
+				<p>You can either select a presentation to edit, or create a new.</p>
+			</div>
+			<div id="slides-menu">
+				<div class="btn-toolbar well">
+					<div id="add-remove-group" class="btn-group">
+						<button id="add-page" class="btn btn-small" title="Add a new page to the end."><i class="icon-plus"></i></button>
+						<button id="insert-page" class="btn btn-small" title="Insert a new page after the current."><i class="icon-chevron-down"></i></button>
+						<button id="remove" class="btn btn-small" data-toggle="modal" data-target="#remove-current-page" title="Remove the current page"><i class="icon-minus"></i></button>
+					</div>
+					<span id="page-button-label"><i class="icon-file"></i>Pages:</span>
+					<div id="page-group" class="btn-group"></div>
+					<div id="save-group" class="btn-group">
+						<button id="save-slides" class="btn btn-small btn-success"><i class="icon-ok icon-white"></i> Save</button>
+					</div>
+					<div id="preview-group" class="btn-group">
+						<a href="#" target="_blank" id="view-url" class="btn btn-small"><i class="icon-share"></i> View Presentation</a>
+					</div>
+					<div id="css-group" class="btn-group">
+						<button id="show-css" class="btn btn-small"><i class="icon-adjust"></i> Custom CSS</button>
+					</div>
+					<div style="clear:both;"></div>
+				</div>
+				<div id="markdown-editor" class="btn-toolbar">
+					<div class="btn-group">
+						<button id="md-bold" class="btn btn-small font-button" title="Bold"><strong>B</strong></button>
+						<button id="md-italic" class="btn btn-small font-button" title="Italic"><em>I</em></button>
+					</div>
+					<div class="btn-group">
+						<button id="md-h1" class="btn btn-small header-button" data-char="#">h1</button>
+						<button id="md-h2" class="btn btn-small header-button" data-char="##">h2</button>
+						<button id="md-h3" class="btn btn-small header-button" data-char="###">h3</button>
+						<button id="md-h4" class="btn btn-small header-button" data-char="####">h4</button>
+						<button id="md-h5" class="btn btn-small header-button" data-char="#####">h5</button>
+						<button id="md-h6" class="btn btn-small header-button" data-char="######">h6</button>
+					</div>
+					<div class="btn-group">
+						<button id="md-link" class="btn btn-small" title="Hyper Link"><i class="icon-share"></i> Link</button>
+						<button id="md-quote" class="btn btn-small" title="Quote"><i class="icon-comment"></i> Quote</button>
+						<button id="md-code" class="btn btn-small" title="Code Block"><em><strong>{ }</strong></em> Code</button>
+						<button id="md-image" class="btn btn-small" title="Image"><i class="icon-picture"></i> Image</button>
+					</div>
+					<div class="btn-group">
+						<button id="md-numbered" class="btn btn-small" title="Ordered List"><i class="icon-list"></i> Ordered</button>
+						<button id="md-unordered" class="btn btn-small" title="Unordered List"><i class="icon-list-alt"></i> Unordered</button>
+					</div>
+					<div class="btn-group">
+						<button id="md-hr" class="btn btn-small" title="Horizontal Rule"><i class="icon-minus"></i> HR</button>
+					</div>
+				</div>
+			</div>
+			<div id="slides-css">
+				<textarea id="custom-css" class="mousetrap"></textarea>
+			</div>
+		</div>
+		<div id="add-new-presentation" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Add a New Presentation</h3>
+			</div>
+			<div class="modal-body">
+				<form id="add-new-form" class="form-inline">
+					<input type="text" title="Identifier! Slugged, so any text will do." required class="input input-medium" maxlength="36" id="p_id" placeholder="id" />
+					<input type="text" title="Informative title goes here." required class="input input-medium" id="title" maxlength="128" placeholder="title" />
+					<input type="text" title="Hello, My Name Is... " required class="input-small" id="author" maxlength="64" placeholder="author" />
+				</form>
+				<div id="url-preview" class="alert alert-info">
+					<span class="url-preview-label">Url Preview: </span>
+					<span class="url-preview-base"></span>
+					<span class="url-preview-append"></span>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">Close</a>
+				<a href="#" id="save-new-presentation" class="btn btn-primary">Save changes</a>
+			</div>
+		</div>
+		<div id="remove-current-page" class="modal hide fade">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h3>Remove the current Page?</h3>
+			</div>
+			<div class="modal-body">
+				<p>This will delete the current page - it will also remove any content that was stored there.</p>
+				<p>Pages must go in numeric order, so the page structure will automatically be collapsed if this is not the last page.</p>
+
+				<p><b>This can not be undone!</b></p>
+			</div>
+			<div class="modal-footer">
+				<a href="#" class="btn" data-dismiss="modal" aria-hidden="true">No way!</a>
+				<a href="#" id="remove-page" class="btn btn-danger"><i class="icon-remove icon-white"></i>Yes, Remove it.</a>
+			</div>
+		</div>
+   </body>
+</html>                                                                                                                           
+
+                                                                                                                               

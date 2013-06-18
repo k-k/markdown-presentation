@@ -1,0 +1,29 @@
+{
+	"require": {
+		"silex/silex": "1.0.*@dev",
+		"knplabs/knp-snappy": "dev-master",
+		"google/wkhtmltopdf-amd64": "0.11.0-RC1",
+		"twig/twig": ">=1.8,<2.0-dev",
+		"nicl/silex-markdown": "1.0.*",
+		"monolog/monolog": ">=1.0.0"	
+	},
+	"minimum-stability": "dev",
+	"autoload": {
+		"psr-0": {
+			"UE": "src/"
+		}
+	},
+	"repositories": [
+		{
+			"type": "package",
+			"package": {
+				"name": "google/wkhtmltopdf-amd64",
+				"version": "0.11.0-RC1",
+				"dist": {
+					"url": "http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.11.0_rc1-static-amd64.tar.bz2",
+					"type": "tar"
+				}
+			}
+		}
+	]
+}

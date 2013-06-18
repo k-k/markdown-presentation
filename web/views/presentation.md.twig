@@ -1,0 +1,47 @@
+<html>
+	<head>
+		<title>{{ slides.meta.title }}</title>
+		{% if slides.pages|length > 0 %}
+		<link rel="stylesheet" href="/css/markdown.css" type="text/css" />
+		<link rel="stylesheet" href="/css/prettify.css" type="text/css" />
+		{% if pdf %}
+		<link rel="stylesheet" href="/css/pdferize.css" type="text/css" />
+		{% endif %}
+		{% else %}
+		<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css" />
+		{% endif %}
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+		<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+		<script src="/scripts/jquery.mobile.min.js"></script>
+		{% if not pdf %}
+		<style>
+			{% for line in slides.css %}
+				{{ line }}
+			{% endfor %}
+		</style>
+		<script src="/scripts/presentation.js"></script>
+		{% endif %}
+		<script src="/scripts/prettify.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() { $('pre code').parents('pre').addClass("prettyprint"); prettyPrint(); });
+		</script>
+	</head>
+	<body>
+		<div id="document" class="markdown-body">
+		{% if slides.pages|length < 1 %}
+			<div class="container" style="width: 65%;">
+				<div class="hero-unit">
+					<h1>Presentation Project - Welcome!</h1>
+					<p>I'm glad that you made it - but this is just a default page.  So, move along now.</p>
+					<p><a class="btn btn-warning btn-large" href="/editor/">Go to the Presentation Editor.</a></p>
+				</div>
+			</div>
+		{% endif %}
+		{% for page in slides.pages %}
+			<div class="page">
+				{{ page.html |raw }}
+			</div>
+		{% endfor %}
+		</div>
+	</body>
+</html>
