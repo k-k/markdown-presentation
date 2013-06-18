@@ -1,20 +1,26 @@
 # Simple Markdown Formatted Presentations - With Silex. 
 
-##To Use: 
-This repository requires `MongoDB` and `PHP 5.4`.  To use, you must configure a few options in `src/app.php`:
+##Installation
+This project is managed with [composer](http://getcomposer.org/) and published to [packagist](https://packagist.org/packages/kmfk/markdown-presentation). To install it:
+	# composer.phar create-project kmfk/markdown-presentation
+
+
+This repository requires `MongoDB` & `PHP 5.4`. 
 
 #####Configure your MongoDB Info
-If the database and/or collection do not exist, they will be created once you create a new presentation. The `mongo.options` array will allow any of the `options` passed to `MongoClient` - see [PHP - MongoClient](http://php.net/manual/en/class.mongoclient.php).  If you do not have a replicaSet, you can set the `mongo.options` property to an empty array.
+If the database and/or collection do not exist, they will be created once you create a new presentation. 
 
-	$app->register( new UE\Provider\MongoClientProvider(), [ 
-		'mongo.host' => "mongodb://example-host.net:27017",
+The `mongo.options` array will allow any of the `options` passed to `MongoClient` - see [PHP - MongoClient](http://php.net/manual/en/class.mongoclient.php).  You can leave the `mongo.options` property as an empty array if its un-needed.
+
+	$app->register( new MarkdownPresentation\Provider\MongoClientProvider(), [ 
+		'mongo.host' => "localhost:27017",
 		'mongo.db'	=> "presentation",
 		'mongo.collection' => "slides",
-		'mongo.options' => [ 'replicaSet' => 'example', 'readPreference' => \MongoClient::RP_SECONDARY_PREFERRED ]
+		'mongo.options' => [ ]
 	]);
 
 #####Configure MonoLog - ( Optional )
-Monolog can be removed ( or commented out ) if you do not want to use it.  Otherwise, make sure that the file specified has the correct permissions, else this will error.
+Monolog can be removed ( or commented out ) if you do not want to use it.  Otherwise, make sure that the file specified has the correct permissions.
 
 	$app->register( new Silex\Provider\MonologServiceProvider(), [ 
 		'monolog.logfile' => '/var/log/apache2/error.log', 
@@ -27,21 +33,38 @@ Monolog can be removed ( or commented out ) if you do not want to use it.  Other
 #####Markdown Formatting:
 [Silex-Markdown Provider](https://github.com/nicl/Silex-Markdown), which relies on the [Dragonfly](https://github.com/dflydev/dflydev-markdown) markdown parser.
 
-
 #####Syntax Highlighting:
 Uses [Google Code Prettify](https://code.google.com/p/google-code-prettify/) to handle code type detection and syntax highlighting of `<pre><code>` blocks.
 
-#####PDF Available:
-Uses [KnpLabs Snappy](https://github.com/KnpLabs/snappy) and [wkhtmltopdf](http://wkhtmltopdf.googlecode.com/) for rendering this into a PDF.
+#####PDF's Available:
+Using [KnpLabs Snappy](https://github.com/KnpLabs/snappy) and [wkhtmltopdf](http://wkhtmltopdf.googlecode.com/) your presentation can be exported as a PDF.
 
-#####Slide Navigation:
-Right and Left arrow keys on the keyboard are bound to move through the slides with simple fade transitions.  Spacebar, Down Arrow, Page Down and Backspace, Up Arrow and Page Up are also available for navigating through slides - to be compatible with presentation remotes.
+#####Slide Navigation & Keyboard shortcuts:
+Relies on (Mousetrap.js)[http://craig.is/killing/mice] for keybindings.
+Both the presentation view and editor have keyboard shortcuts. All standard keys are bound for the Presentation view, to allow it to work with common presenter's remotes.
 
-In the future, I may add other customizable transitions.
+shortcuts | function | View
+--- | ---
+`Left Arrow`, `Spacebar`, `Page Down` | Next Slide | Presentation
+`Right Arrow`, `Backspace`, `Up Down`  | Previous Slide | Presentation
+`Shift + Left` | Next Slide | Editor
+`Shift + Right` | Previous Slide | Editor
+`Shift + a`	| Add New Slide | Editor
+`Shift + i` | Insert Slide After Current | Editor
+`Shift + d` | Remove Current Slide | Editor
+`Shift + s` | Save Changes | Editor
 
+#####Markdown Editor & CSS
+Use the custom Markdown editor for quickly creating & formatting your presentation.  You can specify custom CSS to style any elements:
 
-#####Scaling Text
-The font of the slides scale with the browser window, to be easier to read at farther distances.
+	/* To target H1 tags on the first page */
+	#slide-page-1 h1, h2, h3 {
+		color: red;
+	}
 
-#####Editor built-in
-Use the simple editor manage your presentations and to create your markdown based slides. Editor maintains linebreaks and tabspacing and allows the tab key  to insert tabspaces instead of shifting to the next field.  You may also add your own custom CSS per presentation.
+	/* Or an image... */
+	\!\[specific-title\]\(http:://example.com/image.jpg\)
+
+	img[alt=specific-title] {
+		border-radius: 5px;
+	}

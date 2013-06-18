@@ -6,6 +6,7 @@
 			_.bind( 'tab', util.editor.tab );
 			_.bind( 'shift+a', util.slide.add );
 			_.bind( 'shift+i', util.slide.insert );
+			_.bind( 'shift+d', util.slide.remove );
 			_.bind( 'shift+s', util.presentation.save );
 		},
 		events: function() {
@@ -41,7 +42,10 @@
 				return util.container.setItem( key, val );
 		},
 		slide: {
-			add: function() {
+			add: function( e ) {
+				if ( e.target.tagName == "TEXTAREA" )
+					return true;
+
 				var p = meta.pages() + 1;
 				if ( p == 61 ) return;
 
@@ -51,7 +55,10 @@
 
 				nav.render( p );
 			},
-			insert: function() {
+			insert: function( e ) {
+				if ( e.target.tagName == "TEXTAREA" )
+					return true;
+
 				var p = meta.pages() + 1;
 				var x = util.storage('current-slide');
 				if ( p == 100 ) return;
@@ -62,14 +69,17 @@
 
 				nav.render( x );
 			},
-			remove: function( x ) {
+			remove: function( e ) {
+				if ( e.target.tagName == "TEXTAREA" )
+					return true;
+
 				if ( util.confirmdel() > 0 && ! $('#remove-current-page').is(':visible') )
 				{
 					$('#remove-current-page').modal('show');
 					return false;
 				}
 
-				var x = typeof x == "object" ? util.storage('current-slide') : x;
+				var x = util.storage('current-slide');
 
 				if ( ! $('#delete-confirm').is(':checked') )
 					util.confirmdel( 0 );
@@ -90,7 +100,10 @@
 			}
 		},
 		presentation: {
-			save: function() {
+			save: function( e ) {
+				if ( e.target.tagName == "TEXTAREA" )
+					return true;
+
 				if ( util.storage('current-presentation').length )
 					presentation.save();
 			}
@@ -183,7 +196,7 @@
 				return false;
 			},
 			quote: function( ) {
-				var fn = function( x, s, e, v ) { ">" + v.substring( s, e ).replace(/>/g, '').replace(/\r?\n/g, " "); };
+				var fn = function( x, s, e, v ) { return ">" + v.substring( s, e ).replace(/>/g, '').replace(/\r?\n/g, " "); };
 				util.editor.manipulate( fn, 1, 0 );
 				return false;
 			},

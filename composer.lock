@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "ebca783782b24dd2c86f5abba6cd3c52",
+    "hash": "15117a6c469d7bab47a83e967fc6686f",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -135,12 +135,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "a3864e0b9f0d35ee50e1e3f0a1f73cef56d50e87"
+                "reference": "a43f926ffee4de41f14016dbee2aac1ed2cb411a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a3864e0b9f0d35ee50e1e3f0a1f73cef56d50e87",
-                "reference": "a3864e0b9f0d35ee50e1e3f0a1f73cef56d50e87",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/a43f926ffee4de41f14016dbee2aac1ed2cb411a",
+                "reference": "a43f926ffee4de41f14016dbee2aac1ed2cb411a",
                 "shasum": ""
             },
             "require": {
@@ -189,7 +189,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-05-28 12:09:06"
+            "time": "2013-06-07 08:26:36"
         },
         {
             "name": "nicl/silex-markdown",
@@ -464,12 +464,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/EventDispatcher.git",
-                "reference": "v2.3.0-RC1"
+                "reference": "v2.3.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.0-RC1",
-                "reference": "v2.3.0-RC1",
+                "url": "https://api.github.com/repos/symfony/EventDispatcher/zipball/v2.3.1",
+                "reference": "v2.3.1",
                 "shasum": ""
             },
             "require": {
@@ -518,12 +518,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpFoundation.git",
-                "reference": "v2.3.0-RC1"
+                "reference": "v2.3.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.3.0-RC1",
-                "reference": "v2.3.0-RC1",
+                "url": "https://api.github.com/repos/symfony/HttpFoundation/zipball/v2.3.1",
+                "reference": "v2.3.1",
                 "shasum": ""
             },
             "require": {
@@ -568,12 +568,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/HttpKernel.git",
-                "reference": "4f0f6485abe0e2e8b8a94369fb98b8447fb1e3cc"
+                "reference": "98c849cd968571794d7cfc6edef21aa1363ce05c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/4f0f6485abe0e2e8b8a94369fb98b8447fb1e3cc",
-                "reference": "4f0f6485abe0e2e8b8a94369fb98b8447fb1e3cc",
+                "url": "https://api.github.com/repos/symfony/HttpKernel/zipball/98c849cd968571794d7cfc6edef21aa1363ce05c",
+                "reference": "98c849cd968571794d7cfc6edef21aa1363ce05c",
                 "shasum": ""
             },
             "require": {
@@ -629,7 +629,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "http://symfony.com",
-            "time": "2013-06-03 15:11:57"
+            "time": "2013-06-11 13:34:17"
         },
         {
             "name": "symfony/routing",
@@ -638,12 +638,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Routing.git",
-                "reference": "v2.3.0"
+                "reference": "v2.3.1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.3.0",
-                "reference": "v2.3.0",
+                "url": "https://api.github.com/repos/symfony/Routing/zipball/v2.3.1",
+                "reference": "v2.3.1",
                 "shasum": ""
             },
             "require": {
@@ -695,12 +695,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fabpot/Twig.git",
-                "reference": "a14bcf6a4950a98f678f568a7b24d9c308e3a1a8"
+                "reference": "6f753205834b511269a97fe35108bbd5c8d245f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fabpot/Twig/zipball/a14bcf6a4950a98f678f568a7b24d9c308e3a1a8",
-                "reference": "a14bcf6a4950a98f678f568a7b24d9c308e3a1a8",
+                "url": "https://api.github.com/repos/fabpot/Twig/zipball/6f753205834b511269a97fe35108bbd5c8d245f5",
+                "reference": "6f753205834b511269a97fe35108bbd5c8d245f5",
                 "shasum": ""
             },
             "require": {
@@ -736,7 +736,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2013-06-06 08:57:56"
+            "time": "2013-06-09 06:03:21"
         }
     ],
     "packages-dev": [
@@ -751,9 +751,10 @@
         "knplabs/knp-snappy": 20,
         "google/wkhtmltopdf-amd64": 5
     },
-    "platform": [
-
-    ],
+    "platform": {
+        "php": ">=5.4.0",
+        "ext-mongo": "~1.3"
+    },
     "platform-dev": [
 
     ]

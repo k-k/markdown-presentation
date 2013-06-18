@@ -38,7 +38,7 @@
 			</div>
 		{% endif %}
 		{% for page in slides.pages %}
-			<div class="page">
+			<div class="page" id="slide-page-{{ page.page }}">
 				{{ page.html |raw }}
 			</div>
 		{% endfor %}
