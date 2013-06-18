@@ -1,5 +1,5 @@
 (function( $, _ ) {
-	binds = {
+	var binds = {
 		keys: function() {
 			_.bind( 'shift+right', page.next );
 			_.bind( 'shift+left', page.prev ); 
@@ -13,7 +13,7 @@
 			$('#page-group').on('click', '.page-nav', nav.render );
 			$('#add-page').on('click', util.slide.add );
 			$('#insert-page').on('click', util.slide.insert );
-			$('#remove-page').on('click', page.remove );
+			$('#remove, #remove-page').on('click', util.slide.remove );
 			$('#show-css').on('click', customcss.toggle );
 			$('#save-slides').on('click', util.presentation.save );
 			$('#p_id').on('blur', util.editor.slug );
@@ -25,6 +25,10 @@
 			$('#markdown-editor').on('click', '.header-button', util.editor.header );
 			$('#markdown-editor').on('click', '#md-quote', util.editor.quote );
 			$('#markdown-editor').on('click', '#md-code', util.editor.code );
+			$('#markdown-editor').on('click', '#md-link', util.editor.link );
+			$('#markdown-editor').on('click', '#md-image', util.editor.image );
+			$('#markdown-editor').on('click', '#md-numbered', util.editor.numbered );
+			$('#markdown-editor').on('click', '#md-unordered', util.editor.unordered );
 			$('#markdown-editor').on('click', '#md-hr', util.editor.hr );
 		},
 	},
@@ -57,6 +61,28 @@
 				page.add( p );
 
 				nav.render( x );
+			},
+			remove: function( x ) {
+				if ( util.confirmdel() > 0 && ! $('#remove-current-page').is(':visible') )
+				{
+					$('#remove-current-page').modal('show');
+					return false;
+				}
+
+				var x = typeof x == "object" ? util.storage('current-slide') : x;
+
+				if ( ! $('#delete-confirm').is(':checked') )
+					util.confirmdel( 0 );
+
+				slide.remove( x );
+				page.remove( x );
+			
+				meta.pages( meta.pages() - 1 );
+				slide.reorder();
+				page.reorder();
+				nav.render( ( x - 1 || 1 ) );
+
+				$('#remove-current-page').modal('hide');
 			}
 		},
 		presentation: {
@@ -85,6 +111,15 @@
 					$('#wait-message').text('').parents('div:eq(0)').fadeOut( 100, function() { util.overlay.active = false } );
 				}, d );
 			}
+		},
+		confirmdel: function( val ) {
+			if ( typeof val == "undefined" )
+			{
+				if ( util.storage('confirm-delete') == null ) util.storage('confirm-delete', 1 );
+				return parseInt( util.storage('confirm-delete'), 10 );
+			}
+
+			util.storage('confirm-delete', val );
 		},
 		urlpreview: function() {
 			if ( ! $('.url-preview-base').text().length )
@@ -128,7 +163,7 @@
 					if ( v.indexOf('** ') >= 0 )
 						v = v.replace('** ', '').replace(' **', '');
 					else
-						x.val( v.substring( 0, s ) +  "** " + v.substring( s, e ) + " **" + v.substring( e ) );
+						x.val( v.substring( 0, s ) +  "** " + v.substring( s, e ) + " **" + v.substring( e ) + '\r\n' );
 				};
 				util.editor.manipulate( fn, 3 );
 				return false;
@@ -138,7 +173,7 @@
 					if ( v.indexOf(/\* /) >= 0 )
 						v = v.replace(/\* /, '').replace(/ \*/, '');
 					else
-						x.val( v.substring( 0, s ) +  "* " + v.substring( s, e ) + " *" + v.substring( e ) );
+						x.val( v.substring( 0, s ) +  "* " + v.substring( s, e ) + " *" + v.substring( e ) + '\r\n' );
 				};
 				util.editor.manipulate( fn );
 				return false;
@@ -160,7 +195,61 @@
 			},
 			code: function() {
 				var fn = function( x, s, e, v ) {
-					x.val( v.substring( 0, s ) + "\t" + v.substring( s, e ).replace(/\r?\n/g, '\r\n\t') + v.substring( e ) + '\r\n' );
+					var code = v.substring( s, e ).split(/\r?\n/g);
+					for ( var c in code )
+						code[c] = "\t" + code[c];
+				
+					x.val( v.substring( 0, s ) + code.join('\r\n') + v.substring( e ) + '\r\n' );
+				};
+				util.editor.manipulate( fn );
+				return false;
+			},
+			numbered: function() {
+				var fn = function( x, s, e, v ) {
+					var list = v.substring( s, e ).split(/\r?\n/g);
+					for ( var l in list )
+					{
+						var i = parseInt( l, 10 ) + 1;
+						console.debug( list[l] );
+						list[l] = ' ' + i + '. ' + list[l].replace(/^ \d\. |^ - /g, '');
+					}
+
+					x.val( v.substring( 0, s ) + list.join('\r\n') + v.substring( e ) + '\r\n' );
+				};
+				util.editor.manipulate( fn );
+				return false;
+			},
+			unordered: function() {
+				var fn = function( x, s, e, v ) {
+					var list = v.substring( s, e ).split(/\r?\n/g);
+					for ( var l in list )
+						list[l] = ' - ' + list[l].replace(/^ \d\. |^ - /g, '');
+
+					x.val( v.substring( 0, s ) + list.join('\r\n') + v.substring( e ) + '\r\n' );
+				};
+				util.editor.manipulate( fn );
+				return false;
+			},
+			link: function() {
+				var fn = function( x, s, e, v ) {
+					if ( ! v.substring( s, e ).length )
+						x.val( v.substring( 0, s ) + '[enter description here]( enter url here )' + v.substring( e ) + '\r\n' );
+					else if ( v.substring( s, e ).indexOf('://') >= 0 )
+						x.val( v.substring( 0, s ) + '[enter description here](' + v.substring( s, e ).replace(/\r?\n/g, '') + ')' + v.substring( e ) + '\r\n' );
+					else
+						x.val( v.substring( 0, s ) + '[' + v.substring( s, e ).replace(/\r?\n/g, '') + ']( enter url here )' + v.substring( e ) + '\r\n' );
+				};
+				util.editor.manipulate( fn );
+				return false;
+			},
+			image: function() {
+				var fn = function( x, s, e, v ) {
+					if ( ! v.substring( s, e ).length )
+						x.val( v.substring( 0, s ) + '![enter description here]( enter url here )' + v.substring( e ) + '\r\n' );
+					else if ( v.substring( s, e ).indexOf('://') >= 0 )
+						x.val( v.substring( 0, s ) + '![enter description here](' + v.substring( s, e ).replace(/\r?\n/g, '') + ')' + v.substring( e ) + '\r\n' );
+					else
+						x.val( v.substring( 0, s ) + '![' + v.substring( s, e ).replace(/\r?\n/g, '') + ']( enter url here )' + v.substring( e ) + '\r\n' );
 				};
 				util.editor.manipulate( fn );
 				return false;
@@ -401,18 +490,7 @@
 			);
 		},
 		remove: function( x ) {
-			var page = x || util.storage('current-slide');
-
-			slide.remove( page );
-			$('.page-nav:last').remove();
-			
-			meta.pages( meta.pages() - 1 );
-			slide.reorder();
-			pages.reorder();
-			nav.render( page );
-			toggleActivePage( page );
-
-			$('#remove-current-page').modal('hide');
+			$('#page-button-' + x).remove();
 		},
 		next: function() {
 			var x =  $('#slide-page-' + util.storage('current-slide') ).next('textarea.slide-editor');
@@ -427,7 +505,7 @@
 		reorder: function() {
 			$('.page-nav').each( function() {
 				var p = $('.page-nav').index( this ) + 1;
-				$(this).attr('id', 'page-button-' + p ).text( p ).data('p', p ).hide();
+				$(this).attr('id', 'page-button-' + p ).text( p ).data('p', p );
 			});
 		}
 	},
@@ -461,6 +539,7 @@
 	init = function() {
 		util.storage('current-presentation', '');
 		util.storage('current-slide', 1 );
+		util.storage('confirm-delete', 1 );
 		binds.keys();
 		binds.events();
 		presentation.list();
