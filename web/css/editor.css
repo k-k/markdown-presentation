@@ -36,8 +36,8 @@ header {
 
 .navbar {
 	width: 76%;
-	
 	margin: 0 auto;
+	min-width: 950px;
 }
 
 .navbar-fixed-top .navbar-inner {
@@ -47,11 +47,13 @@ header {
 	z-index: 1010;
 	margin-bottom: 0;
 	width: 100%;
+	min-width: 950px;
 }
 
 .navbar-container {
 	margin: 0 auto;
 	padding: 30px;
+	min-width: 950px;
 }
 
 #selector-area {
@@ -123,14 +125,16 @@ div.info-box {
 
 .slide-editor {
 	display: none;
-	padding: 10px 10px;
+	padding: 50px 10px 10px;
 	width: 100%;
-	min-height: 300px;
+	min-height: 500px;
+	min-width: 950px;
 }
 
 #slides {
 	width: 76%;
 	margin: 0 auto;
+	min-width: 950px;
 }
 
 #slides-empty {
@@ -143,6 +147,8 @@ div.info-box {
 	display: none;
 	width: 100%;
 	margin: 20px 0 -5px;
+	height: 90px;
+	min-width: 950px;
 }
 
 #slides-css {
@@ -217,9 +223,12 @@ button#add {
 }
 
 #markdown-editor {
-	padding-top: 10px;
-	border-top: 1px solid rgba(0,0,0,.05);
-	width: 100%;
+	margin-top: 10px;
+	padding: 10px;
+	width: 600px;
+	position: relative;
+	top: 15px;
+	margin-left: 3px;
 }
 
 .btn-group .font-button {

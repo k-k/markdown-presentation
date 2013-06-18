@@ -43,7 +43,7 @@
 		slide: {
 			add: function() {
 				var p = meta.pages() + 1;
-				if ( p == 100 ) return;
+				if ( p == 61 ) return;
 
 				meta.pages( p );
 				slide.add( p, "" ); 
@@ -76,6 +76,10 @@
 
 				slide.remove( x );
 				page.remove( x );
+				
+				$('#page-group .group').each(function() {
+					if ( ! $(this).find('.page-nav').length ) $(this).remove();
+				});
 			
 				meta.pages( meta.pages() - 1 );
 				slide.reorder();
@@ -132,10 +136,8 @@
 				var x = e.target;
 				if ( x.tagName == "TEXTAREA" )
 				{
-					var fn = function( x, s, e, v ) {
-						x.val( v.substring( 0, s ) + "\t" + v.substring( e ) );
-					}
-					util.editor.manipulate( fn );
+					var fn = function( x, s, e, v ) { return "\t"; }
+					util.editor.manipulate( fn, 1, 0 );
 					return false;
 				}
 			},
@@ -150,47 +152,39 @@
 						$(this).text( util.editor.slug( $(this).text() ) );
 				}
 			},
-			manipulate: function( fn ) {
+			manipulate: function( fn, sx, ex ) {
 				var x = $('.slide-editor:visible');
 				var s = x.get(0).selectionStart;
 				var e = x.get(0).selectionEnd;
 				var v = x.val();
 
-				if ( typeof fn == "function" ) fn( x, s, e, v );
+				x.blur();
+				var str = fn( x, s, e, v );
+				x.val( v.substring( 0, s ) + str + v.substring( e ) + '\r\n' );
+
+				x.get(0).selectionStart = s + sx;
+				x.get(0).selectionEnd = s + str.length - ex;
+				x.focus();
 			},
 			bold: function( ) {				
-				var fn = function( x, s, e, v ) {
-					if ( v.indexOf('** ') >= 0 )
-						v = v.replace('** ', '').replace(' **', '');
-					else
-						x.val( v.substring( 0, s ) +  "** " + v.substring( s, e ) + " **" + v.substring( e ) + '\r\n' );
-				};
-				util.editor.manipulate( fn, 3 );
+				var fn = function( x, s, e, v ) { return "**" + v.substring( s, e ).replace(/\*/g,'').replace(/\r?\n/g, "") + "**"; };
+				util.editor.manipulate( fn, 2, 2 );
 				return false;
 			},
 			italic: function( ) {				
-				var fn = function( x, s, e, v ) {
-					if ( v.indexOf(/\* /) >= 0 )
-						v = v.replace(/\* /, '').replace(/ \*/, '');
-					else
-						x.val( v.substring( 0, s ) +  "* " + v.substring( s, e ) + " *" + v.substring( e ) + '\r\n' );
-				};
-				util.editor.manipulate( fn );
+				var fn = function( x, s, e, v ) { return "*" + v.substring( s, e ).replace(/\*/g,'') + "*"; }
+				util.editor.manipulate( fn, 1, 1 );
 				return false;
 			},
 			header: function( ) {
-				var ch = $(this).data('char');		
-				var fn = function( x, s, e, v ) {
-					x.val( v.substring( 0, s ) +  ch + v.substring( s, e ).replace(/#/g, '') + v.substring( e ) + '\r\n' );
-				};
-				util.editor.manipulate( fn );
+				var ch = $(this).data('char');	
+				var fn = function( x, s, e, v ) { return ch + v.substring( s, e ).replace(/#/g, '').trim() + ch; };
+				util.editor.manipulate( fn, ch.length , ch.length );
 				return false;
 			},
 			quote: function( ) {
-				var fn = function( x, s, e, v ) {
-					x.val( v.substring( 0, s ) +  ">" + v.substring( s, e ).replace(/>/g, '').replace(/\r?\n/g, " ") + v.substring( e ) + '\r\n' );
-				};
-				util.editor.manipulate( fn );
+				var fn = function( x, s, e, v ) { ">" + v.substring( s, e ).replace(/>/g, '').replace(/\r?\n/g, " "); };
+				util.editor.manipulate( fn, 1, 0 );
 				return false;
 			},
 			code: function() {
@@ -199,9 +193,9 @@
 					for ( var c in code )
 						code[c] = "\t" + code[c];
 				
-					x.val( v.substring( 0, s ) + code.join('\r\n') + v.substring( e ) + '\r\n' );
+					return code.join('\r\n');
 				};
-				util.editor.manipulate( fn );
+				util.editor.manipulate( fn, 1, 0 );
 				return false;
 			},
 			numbered: function() {
@@ -210,13 +204,12 @@
 					for ( var l in list )
 					{
 						var i = parseInt( l, 10 ) + 1;
-						console.debug( list[l] );
 						list[l] = ' ' + i + '. ' + list[l].replace(/^ \d\. |^ - /g, '');
 					}
 
-					x.val( v.substring( 0, s ) + list.join('\r\n') + v.substring( e ) + '\r\n' );
+					return list.join('\r\n');
 				};
-				util.editor.manipulate( fn );
+				util.editor.manipulate( fn, 3, 0 );
 				return false;
 			},
 			unordered: function() {
@@ -225,40 +218,36 @@
 					for ( var l in list )
 						list[l] = ' - ' + list[l].replace(/^ \d\. |^ - /g, '');
 
-					x.val( v.substring( 0, s ) + list.join('\r\n') + v.substring( e ) + '\r\n' );
+					return list.join('\r\n');
 				};
-				util.editor.manipulate( fn );
+				util.editor.manipulate( fn, 3, 0 );
 				return false;
 			},
 			link: function() {
 				var fn = function( x, s, e, v ) {
 					if ( ! v.substring( s, e ).length )
-						x.val( v.substring( 0, s ) + '[enter description here]( enter url here )' + v.substring( e ) + '\r\n' );
-					else if ( v.substring( s, e ).indexOf('://') >= 0 )
-						x.val( v.substring( 0, s ) + '[enter description here](' + v.substring( s, e ).replace(/\r?\n/g, '') + ')' + v.substring( e ) + '\r\n' );
-					else
-						x.val( v.substring( 0, s ) + '[' + v.substring( s, e ).replace(/\r?\n/g, '') + ']( enter url here )' + v.substring( e ) + '\r\n' );
+						return '[enter description here]( enter url here )';
+					if ( v.substring( s, e ).indexOf('://') >= 0 )
+						return '[enter description here](' + v.substring( s, e ).replace(/\r?\n/g, '') + ')';
+					return '[' + v.substring( s, e ).replace(/\r?\n/g, '') + ']( enter url here )';
 				};
-				util.editor.manipulate( fn );
+				util.editor.manipulate( fn, 0, 0 );
 				return false;
 			},
 			image: function() {
 				var fn = function( x, s, e, v ) {
 					if ( ! v.substring( s, e ).length )
-						x.val( v.substring( 0, s ) + '![enter description here]( enter url here )' + v.substring( e ) + '\r\n' );
-					else if ( v.substring( s, e ).indexOf('://') >= 0 )
-						x.val( v.substring( 0, s ) + '![enter description here](' + v.substring( s, e ).replace(/\r?\n/g, '') + ')' + v.substring( e ) + '\r\n' );
-					else
-						x.val( v.substring( 0, s ) + '![' + v.substring( s, e ).replace(/\r?\n/g, '') + ']( enter url here )' + v.substring( e ) + '\r\n' );
+						return '![enter description here]( enter url here )';
+					if ( v.substring( s, e ).indexOf('://') >= 0 )
+						return '![enter description here](' + v.substring( s, e ).replace(/\r?\n/g, '') + ')';
+					return '![' + v.substring( s, e ).replace(/\r?\n/g, '') + ']( enter url here )';
 				};
-				util.editor.manipulate( fn );
+				util.editor.manipulate( fn, 10, 0 );
 				return false;
 			},
 			hr: function() {
-				var fn = function( x, s, e, v ) {
-					x.val( v.substring( 0, s ) + v.substring( s, e ) + '\r\n\r\n----------\r\n\r\n' + v.substring( e )  );
-				};
-				util.editor.manipulate( fn );
+				var fn = function( x, s, e, v ) { return v.substring( s, e ) + '\r\n\r\n----------\r\n\r\n'; };
+				util.editor.manipulate( fn, 0, 18 );
 				return false;
 			}
 		}
@@ -440,7 +429,7 @@
 		},
 		show: function() {
 			$('#slides-css').fadeIn( 200 );
-			$('.slide-editor').hide();
+			$('.slide-editor, #markdown-editor').hide();
 			$('.btn-info').removeClass('btn-info');
 			$('#show-css').addClass('btn-info').find('i').addClass('icon-white');
 		},
@@ -448,7 +437,7 @@
 			var p = util.storage('current-slide');
 			if ( p )
 			{
-				$('#slide-page-' + p ).fadeIn( 200 );
+				$('#slide-page-' + p + ', #markdown-editor' ).fadeIn( 200 );
 				$('#page-button-' + p).addClass('btn-info');
 			}
 			$('#show-css').removeClass('btn-info').find('i').removeClass('icon-white');
@@ -467,6 +456,8 @@
 
 			$('#slides-empty, .slide-editor, #slides-css').hide();
 			s.show();
+
+			$('#markdown-editor').show();
 			
 			if ( ! $('#slides-menu').is(':visible') )
 				$('#slides-menu').fadeIn( 100 );
@@ -486,7 +477,7 @@
 			var g = x % 10  == 0 ? x / 10 :  Math.floor( x / 10 ) + 1;
 			group.add( g );
 			$('#group-' + g ).append(
-				$('<button />').attr({ id: "page-button-" + x, class: "btn btn-small page-nav" }).data('p', x).text( x )
+				$('<button />').attr({ id: "page-button-" + x, class: "btn btn-mini page-nav" }).data('p', x).text( x )
 			);
 		},
 		remove: function( x ) {
@@ -517,7 +508,7 @@
 			var start = end - 9;
 			$('#page-group').append(
 				$('<div />')
-					.attr({ id: "group-" + x, class: "btn btn-small btn-group group" })
+					.attr({ id: "group-" + x, class: "btn btn-mini btn-group group" })
 					.data({ g: x, s: start, e: end })
 					.text( start + " - " + end )
 			);
@@ -525,8 +516,8 @@
 		toggle: function( e ) {
 			e = typeof e !== "object" ? $("#group-" + e ) : $(e);
 
-			$('#page-group .group').addClass('btn btn-small').removeClass('active').find('.page-nav').hide();
-			e.removeClass('btn btn-small').addClass('active').find('.page-nav').fadeIn();
+			$('#page-group .group').addClass('btn btn-mini').removeClass('active').find('.page-nav').hide();
+			e.removeClass('btn btn-mini').addClass('active').find('.page-nav').fadeIn();
 		},
 		display: function( e ) {
 			var x = typeof e !== "object" ? $("#group-" + e ).data('g') : $(this).data('g');
