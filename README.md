@@ -2,6 +2,7 @@
 
 ##Installation
 This project is managed with [composer](http://getcomposer.org/) and published to [packagist](https://packagist.org/packages/kmfk/markdown-presentation). To install it:
+
 	# composer.phar create-project kmfk/markdown-presentation
 
 
